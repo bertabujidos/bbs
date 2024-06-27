@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup/Login</title>
+  <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+  <script>
+    async function handleSubmit(event, endpoint) {
+      event.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: hashedPassword })
+      });
+
+      const result = await response.json();
+      alert(result.message || 'Request completed');
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h2>Signup/Login</h2>
+    <form id="signupForm" onsubmit="handleSubmit(event, '/signup')">
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="submit">Sign Up</button>
+    </form>
+    <form id="loginForm" onsubmit="handleSubmit(event, '/login')">
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="submit">Log In</button>
+    </form>
+  </div>
+</body>
+</html>
